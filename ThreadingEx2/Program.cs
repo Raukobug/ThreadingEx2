@@ -1,18 +1,17 @@
 ﻿using System;
+using System.Threading;
 
-namespace FindSmallest
+namespace ThreadingEx2
 {
     class Program
     {
-
-        private static readonly int[][] Data = new int[][]{
+        private static readonly int[][] Data = {
             new[]{1,5,4,2}, 
             new[]{3,2,4,11,4},
             new[]{33,2,3,-1, 10},
             new[]{3,2,8,9,-1},
             new[]{1, 22,1,9,-3, 5}
         };
-
         private static int FindSmallest(int[] numbers)
         {
             if (numbers.Length < 1)
@@ -30,13 +29,17 @@ namespace FindSmallest
             }
             return smallestSoFar;
         }
-
         static void Main()
         {
-            foreach (int[] data in Data)
+            foreach (var d in Data)
             {
-                int smallest = FindSmallest(data);
-                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
+                var d1 = d;
+                var t = new Thread(() =>
+                {
+                    int smallest = FindSmallest(d1);
+                    Console.WriteLine("\t" + String.Join(", ", d1) + "\n-> " + smallest);
+                });
+                t.Start();
             }
         }
     }
