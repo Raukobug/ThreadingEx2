@@ -53,12 +53,12 @@ namespace ThreadingEx2
 
 // ReSharper disable once CoVariantArrayConversion
             Task.WaitAll(tlist.ToArray());
-            int smallestofall = Convert.ToInt32(tlist[0].Result.ToString(CultureInfo.InvariantCulture));
+            int smallestofall = tlist[0].Result;
             foreach (var t in tlist)
             {
-                if (Convert.ToInt32(t.Result.ToString(CultureInfo.InvariantCulture)) < smallestofall)
+                if (t.Result < smallestofall)
                     {
-                        smallestofall = Convert.ToInt32(t.Result.ToString(CultureInfo.InvariantCulture));
+                        smallestofall = t.Result;
                     }
             }
             Console.WriteLine(smallestofall);
