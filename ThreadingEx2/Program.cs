@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ThreadingEx2
 {
@@ -31,16 +34,34 @@ namespace ThreadingEx2
         }
         static void Main()
         {
+            var tlist = new List<Task<int>>();
             foreach (var d in Data)
             {
                 var d1 = d;
-                var t = new Thread(() =>
-                {
-                    int smallest = FindSmallest(d1);
-                    Console.WriteLine("\t" + String.Join(", ", d1) + "\n-> " + smallest);
-                });
-                t.Start();
+
+                tlist.Add
+                    (
+                        Task.Run(() =>
+                            {
+                                int smallest = FindSmallest(d1);
+                                //Console.WriteLine("\t" + String.Join(", ", d1) + "\n-> " + smallest);
+                                return smallest;           
+                            })
+                    );
             }
+
+
+// ReSharper disable once CoVariantArrayConversion
+            Task.WaitAll(tlist.ToArray());
+            int smallestofall = Convert.ToInt32(tlist[0].Result.ToString(CultureInfo.InvariantCulture));
+            foreach (var t in tlist)
+            {
+                if (Convert.ToInt32(t.Result.ToString(CultureInfo.InvariantCulture)) < smallestofall)
+                    {
+                        smallestofall = Convert.ToInt32(t.Result.ToString(CultureInfo.InvariantCulture));
+                    }
+            }
+            Console.WriteLine(smallestofall);
         }
     }
 }
